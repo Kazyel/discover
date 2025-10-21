@@ -1,3 +1,4 @@
+import type { Command } from '@/bot/commands';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
@@ -7,3 +8,5 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: ChatInputCommandInteraction) {
   return interaction.reply('Pong!');
 }
+
+export default { data, execute } as Command;
