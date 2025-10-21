@@ -13,6 +13,7 @@ const config = [
       'github/no-blur': 'error',
       'i18n-text/no-en': 'off',
       'no-console': 'off',
+      'import/no-unresolved': 'off',
     },
   },
 ];
