@@ -14,6 +14,7 @@ const config = [
       'i18n-text/no-en': 'off',
       'no-console': 'off',
       'import/no-unresolved': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 ];

@@ -1,12 +1,12 @@
-import { API } from '@/api/src/models/app-instance';
-import { DatabaseInstance } from '@/api/src/models/database-instance';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+
+import { API } from '@/api/src/models/api';
+import { Database } from '@/api/src/models/database';
 
 const initialize = async () => {
-  const { init } = new API();
-  const { database } = new DatabaseInstance<NeonHttpDatabase>();
-
-  init(database);
+  const apiInstance = new API();
+  const db = new Database<NeonHttpDatabase>();
+  apiInstance.start();
 };
 
 initialize();
