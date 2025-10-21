@@ -1,3 +1,4 @@
+import type { Command } from '@/bot/commands';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
@@ -7,13 +8,13 @@ export const data = new SlashCommandBuilder()
     option
       .setName('first')
       .setDescription('The first number to add')
-      .setRequired(true)
+      .setRequired(true),
   )
   .addIntegerOption((option) =>
     option
       .setName('second')
       .setDescription('The second number to add')
-      .setRequired(true)
+      .setRequired(true),
   );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
@@ -26,6 +27,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
   const sum = firstNumber + secondNumber;
   return interaction.reply(
-    `The sum of ${firstNumber} and ${secondNumber} is ${sum}.`
+    `The sum of ${firstNumber} and ${secondNumber} is ${sum}.`,
   );
 }
+
+export default { data, execute } as Command;

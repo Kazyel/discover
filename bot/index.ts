@@ -1,11 +1,11 @@
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 
-import Commands from '@/commands';
+import CommandsInitializer from './commands';
 
 const token = process.env.DISCORD_TOKEN;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const commands = new Commands();
+const commands = new CommandsInitializer();
 
 if (!token) {
   throw new Error('DISCORD_BOT_TOKEN environment variable is not set.');
