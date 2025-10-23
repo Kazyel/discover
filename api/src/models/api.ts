@@ -8,18 +8,21 @@ import { openapi } from '@elysiajs/openapi';
  */
 
 export class API {
-  private app: Elysia;
+  private app: Elysia<'/api/v1'>;
 
   constructor() {
-    this.app = new Elysia()
-      .get('/', () => 'Hello Elysia')
+    this.app = new Elysia({ prefix: '/api/v1' })
       .use(openapi())
-      .listen(3000);
+      .get('/', () => 'Welcome to the API');
   }
 
   public start() {
+    this.app.listen(3000);
+
     console.log(
       `🦊 Elysia is running at ${this.app.server?.hostname}:${this.app.server?.port}`,
     );
+
+    return this.app;
   }
 }
