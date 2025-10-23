@@ -1,19 +1,13 @@
 import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import type { Elysia } from 'elysia';
 
 import { API } from '@/api/src/models/api';
 import { Database } from '@/api/src/models/database';
 import { guild } from './modules/guilds';
 
-const routes = (api: Elysia<'/api/v1'>) => {
-  api.use(guild);
-};
+const server = new API({ prefix: '/api/v1' });
+const db = new Database<NeonHttpDatabase>();
 
-const initialize = async () => {
-  const api = new API().start();
-  const db = new Database<NeonHttpDatabase>();
+server.decorate('db', db);
+server.addRoute(guild);
 
-  routes(api);
-};
-
-initialize();
+export const app = await server.start();
