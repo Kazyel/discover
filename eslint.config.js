@@ -15,6 +15,7 @@ const config = [
       'no-console': 'off',
       'import/no-unresolved': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-namespace': 'off',
     },
   },
 ];

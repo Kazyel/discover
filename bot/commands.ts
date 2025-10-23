@@ -10,8 +10,8 @@ import {
 
 import { REST, Routes } from 'discord.js';
 
-import ping from './commands/utility/ping';
-import add from './commands/utility/add';
+import ping from './commands/ping';
+import add from './commands/add';
 
 export type Command = {
   data: SlashCommandBuilder;
@@ -66,36 +66,6 @@ class CommandsInitializer {
       const command = commands[commandName as keyof typeof commands];
       client.commands.set(command.data.name, command);
     }
-
-    client.on(Events.InteractionCreate, async (interaction) => {
-      if (!interaction.isChatInputCommand()) return;
-
-      const command = interaction.client.commands.get(interaction.commandName);
-
-      if (!command) {
-        console.error(
-          `No command matching ${interaction.commandName} was found.`,
-        );
-        return;
-      }
-
-      try {
-        await command.execute(interaction);
-      } catch (error) {
-        console.error(error);
-        if (interaction.replied || interaction.deferred) {
-          await interaction.followUp({
-            content: 'There was an error while executing this command!',
-            flags: MessageFlags.Ephemeral,
-          });
-        } else {
-          await interaction.reply({
-            content: 'There was an error while executing this command!',
-            flags: MessageFlags.Ephemeral,
-          });
-        }
-      }
-    });
   }
 }
 
