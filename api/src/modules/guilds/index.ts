@@ -1,30 +1,59 @@
 import type { APIContext } from '@/api/src/core/api';
 
 import { GuildService } from '@/api/src/modules/guilds/service';
-import { GuildModel } from '@/api/src/modules/guilds/model';
+import { create, retrieve } from '@/api/src/modules/guilds/model';
 import { Elysia } from 'elysia';
 
 export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
+
+  /**
+   * Health Check Endpoint
+   */
   .get('/', ({ log, status }) => {
     log.info('Guild endpoint accessed');
 
     return status(200, { data: { message: 'Guild endpoint is working' } });
   })
-  .get('/:id', async ({ log, status, params, db, request }) => {
-    log.info(`${request.method} | Request at: ${request.url}`);
 
-    try {
-      const guild = await GuildService.getGuildById({
-        guildId: params.id,
-        db,
-      });
+  /**
+   * Retrieve Guild by ID
+   */
+  .get(
+    '/:id',
+    async ({ log, status, params, db, request }) => {
+      log.info(`${request.method} | Request at: ${request.url}`);
 
-      return status(200, { data: guild });
-    } catch (error) {
-      log.error(`Failed to retrieve guild: ${error}`);
-      return status(404, { data: { message: 'Guild not found' } });
-    }
-  })
+      try {
+        const guild = await GuildService.getGuildById({
+          guildId: params.id,
+          db,
+        });
+
+        return status(200, {
+          data: {
+            message: 'Guild retrieved successfully',
+            guild,
+          },
+        });
+      } catch (error) {
+        log.error(`Failed to retrieve guild: ${error}`);
+        return status(404, {
+          data: { message: 'Guild not found', guild: [null] },
+        });
+      }
+    },
+    {
+      response: {
+        404: retrieve.retrieveResponse,
+        200: retrieve.retrieveResponse,
+      },
+      body: retrieve.retrieveBody,
+    },
+  )
+
+  /**
+   * Create Guild
+   */
   .post(
     '/',
     async ({ body, log, request, db, status }) => {
@@ -48,10 +77,10 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
       }
     },
     {
-      body: GuildModel.CreateRequestBody,
+      body: create.createRequestBody,
       response: {
-        400: GuildModel.CreateResponse,
-        200: GuildModel.CreateResponse,
+        400: create.createResponse,
+        200: create.createResponse,
       },
     },
   );
