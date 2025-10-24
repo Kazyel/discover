@@ -1,11 +1,11 @@
-import { type Logger } from '@bogeychan/elysia-logger/types';
-import type { AnyElysia, SingletonBase } from 'elysia';
+import type { Logger } from '@bogeychan/elysia-logger/types';
+import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import type { Database } from './database';
+import type { SingletonBase } from 'elysia';
 
 import { Elysia } from 'elysia';
 import { openapi } from '@elysiajs/openapi';
 import { logger } from '@bogeychan/elysia-logger';
-import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import type { Database } from './database';
 
 /**
  * API class to initialize and start the Elysia server with database support.

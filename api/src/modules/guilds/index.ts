@@ -1,4 +1,4 @@
-import type { APIContext } from '@/api/src/models/api';
+import type { APIContext } from '@/api/src/core/api';
 
 import { GuildService } from '@/api/src/modules/guilds/service';
 import { GuildModel } from '@/api/src/modules/guilds/model';

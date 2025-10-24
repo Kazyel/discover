@@ -1,5 +1,5 @@
 import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { Database } from '../../models/database';
+import { Database } from '../../core/database';
 
 import { z } from 'zod';
 
