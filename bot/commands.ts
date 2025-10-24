@@ -1,28 +1,26 @@
 import {
   ChatInputCommandInteraction,
   Collection,
-  Events,
   InteractionResponse,
-  MessageFlags,
   SlashCommandBuilder,
   type Client,
 } from 'discord.js';
 
 import { REST, Routes } from 'discord.js';
 
-import ping from './commands/ping';
-import add from './commands/add';
+import check_connection from './commands/check_connection';
+import save_guild from './commands/save_guild';
 
 export type Command = {
   data: SlashCommandBuilder;
   execute: (
     interaction: ChatInputCommandInteraction,
-  ) => Promise<InteractionResponse<boolean>>;
+  ) => Promise<InteractionResponse>;
 };
 
 const commands = {
-  ping,
-  add,
+  check_connection,
+  save_guild,
 };
 
 class CommandsInitializer {

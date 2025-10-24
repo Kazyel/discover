@@ -1,23 +1,39 @@
-import type { APIContext } from '../../models/api';
+import type { APIContext } from '@/api/src/models/api';
 
+import { GuildService } from '@/api/src/modules/guilds/service';
+import { GuildModel } from '@/api/src/modules/guilds/model';
 import { Elysia } from 'elysia';
-import { GuildService } from './service';
-import { GuildModel } from './model';
 
-export const guild = new Elysia<string, APIContext>({
-  prefix: '/guild',
-})
-  .get('/', (ctx) => {
-    ctx.log.info('Guild endpoint accessed');
-    return { message: 'Guild endpoint' };
+export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
+  .get('/', ({ log, status }) => {
+    log.info('Guild endpoint accessed');
+    return status(200, { data: { message: 'Guild endpoint is working' } });
   })
   .post(
     '/',
-    async ({ body }) => {
+    async ({ body, log, request, db, status }) => {
+      log.info(`Request at: ${request.url}`);
       const { guildId, guildName } = body;
-      return await GuildService.guildCreated({ guildId, guildName });
+
+      try {
+        await GuildService.createGuild({
+          guildId,
+          guildName,
+          db,
+        });
+
+        log.info(`Guild created: ${guildName} (ID: ${guildId})`);
+        return status(200, { data: { message: 'Guild created successfully' } });
+      } catch (error) {
+        log.error(`GuildService.guildCreated: ${error}`);
+        return status(400, { data: { message: 'Error creating guild' } });
+      }
     },
     {
-      body: GuildModel.guildCreatedBody,
+      body: GuildModel.requestBody,
+      response: {
+        400: GuildModel.createResponse,
+        200: GuildModel.createResponse,
+      },
     },
   );
