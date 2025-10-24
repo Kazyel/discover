@@ -1,14 +1,13 @@
-import type { GuildModel } from '@/api/src/modules/guilds/model';
+import type {
+  CreateServiceParams,
+  RetrieveBody,
+} from '@/api/src/modules/guilds/model';
 
 import { guildsTable } from '@/api/src/db/schema';
 import { eq } from 'drizzle-orm';
 
 export abstract class GuildService {
-  static async createGuild({
-    guildId,
-    guildName,
-    db,
-  }: GuildModel.CreateServiceParams) {
+  static async createGuild({ guildId, guildName, db }: CreateServiceParams) {
     try {
       await db
         .getDatabase()
@@ -21,11 +20,9 @@ export abstract class GuildService {
     } catch (error) {
       throw new Error(`Failed to create guild: ${error}`);
     }
-
-    return { message: 'Guild created', guild: { guildId, guildName } };
   }
 
-  static async getGuildById({ guildId, db }: GuildModel.RetrieveBody) {
+  static async getGuildById({ guildId, db }: RetrieveBody) {
     try {
       const guild = await db
         .getDatabase()
