@@ -4,6 +4,8 @@ import type { AnyElysia, SingletonBase } from 'elysia';
 import { Elysia } from 'elysia';
 import { openapi } from '@elysiajs/openapi';
 import { logger } from '@bogeychan/elysia-logger';
+import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import type { Database } from './database';
 
 /**
  * API class to initialize and start the Elysia server with database support.
@@ -16,6 +18,9 @@ export interface APIConfig {
 }
 
 export type APIContext = SingletonBase & {
+  decorator: {
+    db: Database<NeonHttpDatabase>;
+  };
   derive: {
     readonly log: Logger;
   };
@@ -26,9 +31,14 @@ export type APIElysia = Elysia<string, APIContext>;
 export class API {
   private app: APIElysia;
   private config: APIConfig;
+  private database: Database<NeonHttpDatabase>;
 
-  constructor(config: APIConfig = { port: 3000, prefix: '/api/v1' }) {
+  constructor(
+    config: APIConfig = { port: 3000, prefix: '/api/v1' },
+    db: Database<NeonHttpDatabase>,
+  ) {
     this.config = config;
+    this.database = db;
 
     this.app = new Elysia({ prefix: config.prefix })
       .use(openapi())
@@ -43,29 +53,8 @@ export class API {
           },
         }),
       )
+      .decorate('db', this.database)
       .get('/', () => 'Welcome to the API');
-  }
-
-  /**
-   * Adds a new route to the Elysia application.
-   * @param route - The route to add.
-   * @example
-   * api.addRoute(guildRoute);
-   */
-  public addRoute(route: AnyElysia) {
-    this.app.use(route);
-  }
-
-  /**
-   * Decorate the Elysia app with a new property or method.
-   * @param key - The key under which to store the value.
-   * @param value - The value to store.
-   * @example
-   * api.decorate('myService', new MyService());
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public decorate(key: string, value: any) {
-    this.app.decorate(key, value);
   }
 
   /**
@@ -81,6 +70,10 @@ export class API {
     );
 
     return this.app;
+  }
+
+  public addRoute(route: APIElysia) {
+    this.app.use(route);
   }
 
   /*

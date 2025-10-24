@@ -2,12 +2,11 @@ import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 
 import { API } from '@/api/src/models/api';
 import { Database } from '@/api/src/models/database';
-import { guild } from './modules/guilds';
+import { guildsRoute } from './modules/guilds';
 
-const server = new API({ prefix: '/api/v1' });
 const db = new Database<NeonHttpDatabase>();
+const server = new API({ prefix: '/api/v1', port: 3000 }, db);
 
-server.decorate('db', db);
-server.addRoute(guild);
+server.addRoute(guildsRoute);
 
 export const app = await server.start();

@@ -1,7 +1,6 @@
 import { Client, Events, GatewayIntentBits } from 'discord.js';
-
-import CommandsInitializer from './commands';
 import Undici from 'undici';
+import CommandsInitializer from '@/bot/commands';
 
 const token = process.env.DISCORD_TOKEN;
 
@@ -52,11 +51,43 @@ client.on(Events.InteractionCreate, async (interaction) => {
   const { commandName } = interaction;
   await interaction.deferReply();
 
-  if (commandName === 'ping') {
+  if (commandName === 'check_connection') {
     try {
-      const result = await Undici.request(`http://api:3000/api/v1/guild/`);
+      const result = await Undici.request(`http://api:3000/api/v1/guilds/`);
       const data = await result.body.json();
       await interaction.editReply({ content: JSON.stringify(data) });
+    } catch (error) {
+      console.error('Error fetching data from API:', error);
+      await interaction.editReply({ content: 'Error fetching data from API.' });
+    }
+  }
+
+  if (commandName === 'save_guild') {
+    try {
+      const { statusCode, body } = await Undici.request(
+        `http://api:3000/api/v1/guilds/`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            guildId: interaction.guild?.id,
+            guildName: interaction.guild?.name,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (statusCode === 200) {
+        await interaction.editReply({ content: 'Guild saved successfully.' });
+        return;
+      }
+
+      const responseBody = await body.text();
+
+      await interaction.editReply({
+        content: `Failed to save guild. [Status: ${statusCode}] - Error: ${responseBody}`,
+      });
     } catch (error) {
       console.error('Error fetching data from API:', error);
       await interaction.editReply({ content: 'Error fetching data from API.' });

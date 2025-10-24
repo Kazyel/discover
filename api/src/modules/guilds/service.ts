@@ -1,11 +1,21 @@
-import type { GuildModel } from './model';
+import type { GuildModel } from '@/api/src/modules/guilds/model';
+
+import { guildsTable } from '@/api/src/db/schema';
 
 export abstract class GuildService {
-  static async guildCreated({
-    guildId,
-    guildName,
-  }: GuildModel.guildCreatedBody) {
-    console.log(`Guild created: ${guildName} (ID: ${guildId})`);
+  static async createGuild({ guildId, guildName, db }: GuildModel.createBody) {
+    try {
+      await db
+        .getDatabase()
+        .insert(guildsTable)
+        .values({
+          name: guildName,
+          guildId,
+        })
+        .execute();
+    } catch (error) {
+      throw new Error(`Failed to create guild: ${error}`);
+    }
 
     return { message: 'Guild created', guild: { guildId, guildName } };
   }
