@@ -10,6 +10,7 @@ import { REST, Routes } from 'discord.js';
 
 import check_connection from './commands/check_connection';
 import save_guild from './commands/save_guild';
+import retrieve_guild from './commands/retrieve_guild';
 
 export type Command = {
   data: SlashCommandBuilder;
@@ -20,6 +21,7 @@ export type Command = {
 
 const commands = {
   check_connection,
+  retrieve_guild,
   save_guild,
 };
 

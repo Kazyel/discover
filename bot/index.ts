@@ -62,6 +62,20 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
   }
 
+  if (commandName === 'retrieve_guild') {
+    try {
+      const guildId = interaction.guild?.id;
+      const result = await Undici.request(
+        `http://api:3000/api/v1/guilds/${guildId}`,
+      );
+      const data = await result.body.json();
+      await interaction.editReply({ content: JSON.stringify(data) });
+    } catch (error) {
+      console.error('Error fetching data from API:', error);
+      await interaction.editReply({ content: 'Error fetching data from API.' });
+    }
+  }
+
   if (commandName === 'save_guild') {
     try {
       const { statusCode, body } = await Undici.request(
