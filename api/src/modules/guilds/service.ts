@@ -1,3 +1,4 @@
+import type { Database } from '@/api/src/core/database';
 import type {
   CreateServiceParams,
   RetrieveBody,
@@ -6,11 +7,16 @@ import type {
 import { guildsTable } from '@/api/src/db/schema';
 import { eq } from 'drizzle-orm';
 
-export abstract class GuildService {
-  static async createGuild({ guildId, guildName, db }: CreateServiceParams) {
+export class GuildService {
+  private db: Database;
+
+  constructor(db: Database) {
+    this.db = db;
+  }
+
+  async createGuild({ guildId, guildName }: CreateServiceParams) {
     try {
-      await db
-        .getDatabase()
+      await this.db
         .insert(guildsTable)
         .values({
           name: guildName,
@@ -22,10 +28,9 @@ export abstract class GuildService {
     }
   }
 
-  static async getGuildById({ guildId, db }: RetrieveBody) {
+  async getGuildById(guildId: RetrieveBody) {
     try {
-      const guild = await db
-        .getDatabase()
+      const guild = await this.db
         .select()
         .from(guildsTable)
         .where(eq(guildsTable.guildId, guildId))

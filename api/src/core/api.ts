@@ -19,7 +19,7 @@ export interface APIConfig {
 
 export type APIContext = SingletonBase & {
   decorator: {
-    db: Database<NeonHttpDatabase>;
+    db: Database;
   };
   derive: {
     readonly log: Logger;
@@ -31,11 +31,11 @@ export type APIElysia = Elysia<string, APIContext>;
 export class API {
   private app: APIElysia;
   private config: APIConfig;
-  private database: Database<NeonHttpDatabase>;
+  private database: Database;
 
   constructor(
     config: APIConfig = { port: 3000, prefix: '/api/v1' },
-    db: Database<NeonHttpDatabase>,
+    db: Database,
   ) {
     this.config = config;
     this.database = db;

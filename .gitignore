@@ -6,6 +6,9 @@ out
 dist
 *.tgz
 
+# migrations
+drizzle
+
 # code coverage
 coverage
 *.lcov
