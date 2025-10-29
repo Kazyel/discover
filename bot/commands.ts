@@ -8,9 +8,10 @@ import {
 
 import { REST, Routes } from 'discord.js';
 
-import check_connection from './commands/check_connection';
-import save_guild from './commands/save_guild';
-import retrieve_guild from './commands/retrieve_guild';
+import check_connection from '@/bot/commands/check_connection';
+import save_guild from '@/bot/commands/save_guild';
+import retrieve_guild from '@/bot/commands/retrieve_guild';
+import set_keywords from '@/bot/commands/set_keywords';
 
 export type Command = {
   data: SlashCommandBuilder;
@@ -23,6 +24,7 @@ const commands = {
   check_connection,
   retrieve_guild,
   save_guild,
+  set_keywords,
 };
 
 class CommandsInitializer {

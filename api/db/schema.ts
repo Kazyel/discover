@@ -26,7 +26,7 @@ export const guildKeywordsTable = pgTable('guild_keywords', {
   title_only: varchar('title_only', { length: 255 }).default('').notNull(),
   where: varchar('where', { length: 255 }).default('').notNull(),
   country: varchar('country', { length: 2 }).default('').notNull(),
-  distance: integer('distance').default(0).notNull(),
+  distance: integer('distance').default(5).notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });

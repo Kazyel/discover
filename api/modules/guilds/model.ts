@@ -40,8 +40,11 @@ export const GuildModel = {
   },
 };
 
-export const retrieve = GuildModel.retrieve;
-export const create = GuildModel.create;
+export const guildRetrieve = GuildModel.retrieve;
+export const guildCreate = GuildModel.create;
 
-export type CreateServiceParams = z.infer<typeof create.createServiceParams>;
-export type RetrieveBody = z.infer<typeof retrieve.retrieveBody>;
+export type CreateServiceParams = z.infer<
+  typeof guildCreate.createServiceParams
+>;
+
+export type RetrieveBody = z.infer<typeof guildRetrieve.retrieveBody>;
