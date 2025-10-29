@@ -1,9 +1,9 @@
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits, MessageFlags } from 'discord.js';
 import Undici from 'undici';
 import CommandsInitializer from '@/bot/commands';
+import keywordsModal from '@/bot/modals/keywords-modal';
 
 const token = process.env.DISCORD_TOKEN;
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const commands = new CommandsInitializer();
 
@@ -49,16 +49,30 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   const { commandName } = interaction;
-  await interaction.deferReply();
+
+  if (commandName === 'set_keywords') {
+    try {
+      await interaction.showModal(keywordsModal);
+    } catch (error) {
+      console.error('Error showing modal:', error);
+      await interaction.reply({
+        content: 'Error showing modal.',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
+  }
 
   if (commandName === 'check_connection') {
     try {
       const result = await Undici.request(`http://api:3000/api/v1/guilds/`);
       const data = await result.body.json();
-      await interaction.editReply({ content: JSON.stringify(data) });
+      await interaction.reply({ content: JSON.stringify(data) });
     } catch (error) {
       console.error('Error fetching data from API:', error);
-      await interaction.editReply({ content: 'Error fetching data from API.' });
+      await interaction.reply({
+        content: 'Error fetching data from API.',
+        flags: MessageFlags.Ephemeral,
+      });
     }
   }
 
@@ -69,10 +83,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
         `http://api:3000/api/v1/guilds/${guildId}`,
       );
       const data = await result.body.json();
-      await interaction.editReply({ content: JSON.stringify(data) });
+      await interaction.reply({ content: JSON.stringify(data) });
     } catch (error) {
       console.error('Error fetching data from API:', error);
-      await interaction.editReply({ content: 'Error fetching data from API.' });
+      await interaction.reply({
+        content: 'Error fetching data from API.',
+        flags: MessageFlags.Ephemeral,
+      });
     }
   }
 
@@ -93,23 +110,25 @@ client.on(Events.InteractionCreate, async (interaction) => {
       );
 
       if (statusCode === 200) {
-        await interaction.editReply({ content: 'Guild saved successfully.' });
+        await interaction.reply({ content: 'Guild saved successfully.' });
         return;
       }
 
       const responseBody = await body.text();
 
-      await interaction.editReply({
+      await interaction.reply({
         content: `Failed to save guild. [Status: ${statusCode}] - Error: ${responseBody}`,
       });
     } catch (error) {
       console.error('Error fetching data from API:', error);
-      await interaction.editReply({ content: 'Error fetching data from API.' });
+      await interaction.reply({
+        content: 'Error fetching data from API.',
+        flags: MessageFlags.Ephemeral,
+      });
     }
   }
 });
 
 commands.deploy();
 commands.initialize(client);
-
 client.login(token);

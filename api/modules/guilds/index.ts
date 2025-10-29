@@ -2,8 +2,11 @@ import type { APIContext } from '@/api/core/api';
 
 import { Elysia } from 'elysia';
 import { GuildService } from '@/api/modules/guilds/service';
-import { create, retrieve } from '@/api/modules/guilds/model';
+import { guildCreate, guildRetrieve } from '@/api/modules/guilds/model';
 import { keywordsRoute } from '@/api/modules/keywords';
+
+const { retrieveBody, retrieveResponse } = guildRetrieve;
+const { createRequestBody, createResponse } = guildCreate;
 
 export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
 
@@ -43,10 +46,10 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
     },
     {
       response: {
-        404: retrieve.retrieveResponse,
-        200: retrieve.retrieveResponse,
+        404: retrieveResponse,
+        200: retrieveResponse,
       },
-      body: retrieve.retrieveBody,
+      body: retrieveBody,
     },
   )
 
@@ -69,7 +72,7 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
 
         log.info(`Guild created: ${guildName} (ID: ${guildId})`);
 
-        return status(200, { data: { message: 'Guild created successfully' } });
+        return status(201, { data: { message: 'Guild created successfully' } });
       } catch (error) {
         log.error(`GuildService.guildCreated: ${error}`);
 
@@ -77,10 +80,10 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
       }
     },
     {
-      body: create.createRequestBody,
+      body: createRequestBody,
       response: {
-        400: create.createResponse,
-        200: create.createResponse,
+        400: createResponse,
+        201: createResponse,
       },
     },
   )
