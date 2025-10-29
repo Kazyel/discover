@@ -1,16 +1,8 @@
-import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-
-import { Database } from '@/api/src/core/database';
-
 import { z } from 'zod';
 
 export const GuildModel = {
   retrieve: {
-    retrieveBody: z.object({
-      guildId: z.string(),
-      db: z.instanceof(Database<NeonHttpDatabase>),
-    }),
-
+    retrieveBody: z.string(),
     retrieveResponse: z.object({
       data: z.object({
         message: z.string(),
@@ -38,7 +30,6 @@ export const GuildModel = {
     createServiceParams: z.object({
       guildId: z.string(),
       guildName: z.string(),
-      db: z.instanceof(Database<NeonHttpDatabase>),
     }),
 
     createResponse: z.object({

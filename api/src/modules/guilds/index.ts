@@ -1,8 +1,9 @@
 import type { APIContext } from '@/api/src/core/api';
 
+import { Elysia } from 'elysia';
 import { GuildService } from '@/api/src/modules/guilds/service';
 import { create, retrieve } from '@/api/src/modules/guilds/model';
-import { Elysia } from 'elysia';
+import { keywordsRoute } from '../keywords';
 
 export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
 
@@ -11,7 +12,6 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
    */
   .get('/', ({ log, status }) => {
     log.info('Guild endpoint accessed');
-
     return status(200, { data: { message: 'Guild endpoint is working' } });
   })
 
@@ -19,15 +19,14 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
    * Retrieve Guild by ID
    */
   .get(
-    '/:id',
+    '/:guildId',
     async ({ log, status, params, db, request }) => {
       log.info(`${request.method} | Request at: ${request.url}`);
 
+      const guildService = new GuildService(db);
+
       try {
-        const guild = await GuildService.getGuildById({
-          guildId: params.id,
-          db,
-        });
+        const guild = await guildService.getGuildById(params.guildId);
 
         return status(200, {
           data: {
@@ -58,13 +57,14 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
     '/',
     async ({ body, log, request, db, status }) => {
       log.info(`${request.method} | Request at: ${request.url}`);
+
       const { guildId, guildName } = body;
+      const guildService = new GuildService(db);
 
       try {
-        await GuildService.createGuild({
+        await guildService.createGuild({
           guildId,
           guildName,
-          db,
         });
 
         log.info(`Guild created: ${guildName} (ID: ${guildId})`);
@@ -83,4 +83,5 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
         200: create.createResponse,
       },
     },
-  );
+  )
+  .use(keywordsRoute);
