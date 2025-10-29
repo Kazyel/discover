@@ -1,9 +1,9 @@
-import type { APIContext } from '@/api/src/core/api';
+import type { APIContext } from '@/api/core/api';
 
 import { Elysia } from 'elysia';
-import { GuildService } from '@/api/src/modules/guilds/service';
-import { create, retrieve } from '@/api/src/modules/guilds/model';
-import { keywordsRoute } from '../keywords';
+import { GuildService } from '@/api/modules/guilds/service';
+import { create, retrieve } from '@/api/modules/guilds/model';
+import { keywordsRoute } from '@/api/modules/keywords';
 
 export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
 

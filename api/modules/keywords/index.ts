@@ -1,4 +1,5 @@
-import type { APIContext } from '@/api/src/core/api';
+import type { APIContext } from '@/api/core/api';
+
 import { Elysia } from 'elysia';
 
 export const keywordsRoute = new Elysia<string, APIContext>()

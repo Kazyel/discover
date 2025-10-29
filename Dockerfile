@@ -12,7 +12,7 @@ COPY . .
 # API stage
 FROM base AS api
 EXPOSE 3000
-CMD ["bun", "run", "--watch", "api/src/index.ts"]
+CMD ["bun", "run", "--watch", "api/index.ts"]
 
 # Bot stage
 FROM base AS bot
