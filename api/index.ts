@@ -1,8 +1,7 @@
-import { API } from '@/api/src/core/api';
-import { db } from '@/api/src/core/database';
+import { API } from '@/api/core/api';
+import { db } from '@/api/core/database';
 
-import { guildsRoute } from './modules/guilds';
-import { keywordsRoute } from './modules/keywords';
+import { guildsRoute } from '@/api/modules/guilds';
 
 const server = new API({ prefix: '/api/v1', port: 3000 }, db);
 

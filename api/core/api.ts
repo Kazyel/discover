@@ -1,7 +1,6 @@
-import type { Logger } from '@bogeychan/elysia-logger/types';
-import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import type { Database } from './database';
 import type { SingletonBase } from 'elysia';
+import type { Logger } from '@bogeychan/elysia-logger/types';
+import type { Database } from '@/api/core/database';
 
 import { Elysia } from 'elysia';
 import { openapi } from '@elysiajs/openapi';

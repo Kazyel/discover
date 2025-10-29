@@ -3,8 +3,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "bot": "bun run ./bot/index.ts",
-    "api": "bun run ./api/src/index.ts",
+    "bot": "bun run @/bot/index.ts",
+    "api": "bun run @/api/index.ts",
     "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {

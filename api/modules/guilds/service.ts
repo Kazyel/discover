@@ -1,10 +1,10 @@
-import type { Database } from '@/api/src/core/database';
+import type { Database } from '@/api/core/database';
 import type {
   CreateServiceParams,
   RetrieveBody,
-} from '@/api/src/modules/guilds/model';
+} from '@/api/modules/guilds/model';
 
-import { guildsTable } from '@/api/src/db/schema';
+import { guildsTable } from '@/api/db/schema';
 import { eq } from 'drizzle-orm';
 
 export class GuildService {
