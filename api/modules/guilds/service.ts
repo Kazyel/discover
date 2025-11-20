@@ -1,8 +1,5 @@
 import type { Database } from '@/api/core/database';
-import type {
-  CreateServiceParams,
-  RetrieveBody,
-} from '@/api/modules/guilds/model';
+import type { CreateServiceParams } from '@/api/modules/guilds/model';
 
 import { guildsTable } from '@/api/db/schema';
 import { eq } from 'drizzle-orm';
@@ -28,7 +25,7 @@ export class GuildService {
     }
   }
 
-  async getGuildById(guildId: RetrieveBody) {
+  async getGuildById(guildId: string) {
     try {
       const guild = await this.db
         .select()
@@ -39,6 +36,26 @@ export class GuildService {
       return guild;
     } catch (error) {
       throw new Error(`Failed to retrieve guild: ${error}`);
+    }
+  }
+
+  async getAllGuilds() {
+    try {
+      const guilds = await this.db.select().from(guildsTable).execute();
+      return guilds;
+    } catch (error) {
+      throw new Error(`Failed to retrieve guilds: ${error}`);
+    }
+  }
+
+  async deleteGuildById(guildId: string) {
+    try {
+      await this.db
+        .delete(guildsTable)
+        .where(eq(guildsTable.guildId, guildId))
+        .execute();
+    } catch (error) {
+      throw new Error(`Failed to delete guild: ${error}`);
     }
   }
 }
