@@ -1,15 +1,16 @@
 import { Client, Events, GatewayIntentBits, MessageFlags } from 'discord.js';
 import Undici from 'undici';
-import CommandsInitializer from '@/bot/commands';
-import keywordsModal from '@/bot/modals/keywords-modal';
+
+import CommandRegister from '@/bot/commands';
+import { keywordsModal, whereModal } from '@/bot/modals/modals';
 
 const token = process.env.DISCORD_TOKEN;
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const commands = new CommandsInitializer();
-
 if (!token) {
   throw new Error('DISCORD_BOT_TOKEN environment variable is not set.');
 }
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const commands = new CommandRegister();
 
 client.once(Events.ClientReady, (readyClient) => {
   console.log(`Ready! Logged in as ${readyClient.user.tag}`);
@@ -22,7 +23,7 @@ client.once(Events.GuildCreate, async (guild) => {
       guildName: guild.name,
     };
 
-    const result = await Undici.request('http://api:3000/api/v1/guild/', {
+    const result = await Undici.request('http://api:3000/api/v1/guilds/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -47,12 +48,23 @@ client.once(Events.GuildDelete, (guild) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
-
   const { commandName } = interaction;
 
   if (commandName === 'set_keywords') {
     try {
       await interaction.showModal(keywordsModal);
+    } catch (error) {
+      console.error('Error showing modal:', error);
+      await interaction.reply({
+        content: 'Error showing modal.',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
+  }
+
+  if (commandName === 'set_where') {
+    try {
+      await interaction.showModal(whereModal);
     } catch (error) {
       console.error('Error showing modal:', error);
       await interaction.reply({
@@ -130,5 +142,5 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 commands.deploy();
-commands.initialize(client);
+commands.register(client);
 client.login(token);

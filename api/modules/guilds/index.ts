@@ -5,11 +5,10 @@ import { GuildService } from '@/api/modules/guilds/service';
 import { guildCreate, guildRetrieve } from '@/api/modules/guilds/model';
 import { keywordsRoute } from '@/api/modules/keywords';
 
-const { retrieveBody, retrieveResponse } = guildRetrieve;
+const { retrieveResponse } = guildRetrieve;
 const { createRequestBody, createResponse } = guildCreate;
 
 export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
-
   /**
    * Health Check Endpoint
    */
@@ -34,13 +33,13 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
         return status(200, {
           data: {
             message: 'Guild retrieved successfully',
-            guild,
+            guilds: guild,
           },
         });
       } catch (error) {
         log.error(`Failed to retrieve guild: ${error}`);
         return status(404, {
-          data: { message: 'Guild not found', guild: [null] },
+          data: { message: 'Guild not found', guilds: [null] },
         });
       }
     },
@@ -49,7 +48,41 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
         404: retrieveResponse,
         200: retrieveResponse,
       },
-      body: retrieveBody,
+    },
+  )
+
+  /**
+   * Retrieve All Guilds
+   */
+  .get(
+    '/all',
+    async ({ log, status, db, request }) => {
+      log.info(`${request.method} | Request at: ${request.url}`);
+
+      const guildService = new GuildService(db);
+
+      try {
+        const guilds = await guildService.getAllGuilds();
+
+        return status(200, {
+          data: {
+            message: 'Guilds retrieved successfully',
+            guilds,
+          },
+        });
+      } catch (error) {
+        log.error(`Failed to retrieve guilds: ${error}`);
+
+        return status(404, {
+          data: { message: 'No guilds found', guilds: [null] },
+        });
+      }
+    },
+    {
+      response: {
+        404: retrieveResponse,
+        200: retrieveResponse,
+      },
     },
   )
 
@@ -76,7 +109,12 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
       } catch (error) {
         log.error(`GuildService.guildCreated: ${error}`);
 
-        return status(400, { data: { message: 'Error creating guild' } });
+        return status(400, {
+          data: {
+            message: 'Error creating guild',
+            error: (error as Error).message,
+          },
+        });
       }
     },
     {
@@ -86,5 +124,33 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
         201: createResponse,
       },
     },
+  )
+  /**
+   * Delete Guild
+   */
+  .delete(
+    '/:guildId',
+    async ({ log, status, params, db, request }) => {
+      log.info(`${request.method} | Request at: ${request.url}`);
+
+      const guildService = new GuildService(db);
+
+      try {
+        await guildService.deleteGuildById(params.guildId);
+
+        log.info(`Guild deleted: ID ${params.guildId}`);
+
+        return status(200, {
+          data: { message: 'Guild deleted successfully' },
+        });
+      } catch (error) {
+        log.error(`Failed to delete guild: ${error}`);
+
+        return status(404, {
+          data: { message: 'Guild not found', error: (error as Error).message },
+        });
+      }
+    },
+    { response: { 404: createResponse, 200: createResponse } },
   )
   .use(keywordsRoute);

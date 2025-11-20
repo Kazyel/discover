@@ -2,11 +2,10 @@ import { z } from 'zod';
 
 export const GuildModel = {
   retrieve: {
-    retrieveBody: z.string(),
     retrieveResponse: z.object({
       data: z.object({
         message: z.string(),
-        guild: z.array(
+        guilds: z.array(
           z
             .object({
               id: z.number(),
@@ -35,6 +34,7 @@ export const GuildModel = {
     createResponse: z.object({
       data: z.object({
         message: z.string(),
+        error: z.string().optional(),
       }),
     }),
   },
@@ -46,5 +46,3 @@ export const guildCreate = GuildModel.create;
 export type CreateServiceParams = z.infer<
   typeof guildCreate.createServiceParams
 >;
-
-export type RetrieveBody = z.infer<typeof guildRetrieve.retrieveBody>;
