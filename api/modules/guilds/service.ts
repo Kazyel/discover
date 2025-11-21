@@ -1,8 +1,13 @@
 import type { Database } from '@/api/core/database';
-import type { CreateServiceParams } from '@/api/modules/guilds/model';
+import type {
+  CreateServiceParams,
+  UpdateServiceParams,
+} from '@/api/modules/guilds/model';
 
 import { guildsTable } from '@/api/db/schema';
 import { eq } from 'drizzle-orm';
+
+const DEFAULT_GUILD_LIMIT = 20;
 
 export class GuildService {
   private db: Database;
@@ -41,10 +46,27 @@ export class GuildService {
 
   async getAllGuilds() {
     try {
-      const guilds = await this.db.select().from(guildsTable).execute();
+      const guilds = await this.db
+        .select()
+        .from(guildsTable)
+        .limit(DEFAULT_GUILD_LIMIT)
+        .execute();
+
       return guilds;
     } catch (error) {
       throw new Error(`Failed to retrieve guilds: ${error}`);
+    }
+  }
+
+  async updateGuildName({ guildId, newName }: UpdateServiceParams) {
+    try {
+      await this.db
+        .update(guildsTable)
+        .set({ name: newName })
+        .where(eq(guildsTable.guildId, guildId))
+        .execute();
+    } catch (error) {
+      throw new Error(`Failed to update guild name: ${error}`);
     }
   }
 

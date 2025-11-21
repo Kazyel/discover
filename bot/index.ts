@@ -46,6 +46,30 @@ client.once(Events.GuildDelete, (guild) => {
   });
 });
 
+client.on(Events.GuildUpdate, async (oldGuild, newGuild) => {
+  console.log(`Guild updated: ${oldGuild.name} -> ${newGuild.name}`);
+  try {
+    const result = await Undici.request(
+      `http://api:3000/api/v1/guilds/${newGuild.id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ guildName: newGuild.name }),
+      },
+    );
+
+    if (result.statusCode === 200) {
+      const data = await result.body.json();
+      console.log('Guild update reported to API:', data);
+      return;
+    }
+  } catch (error) {
+    console.error('Error updating guild name in API:', error);
+  }
+});
+
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
   const { commandName } = interaction;

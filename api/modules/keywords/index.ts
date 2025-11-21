@@ -1,14 +1,14 @@
 import type { APIContext } from '@/api/core/api';
 
 import { Elysia } from 'elysia';
-import { keywordsCreate, keywordsRetrieve } from '@/api/modules/keywords/model';
+import { KeywordsModel } from '@/api/modules/keywords/model';
 import { KeywordsService } from '@/api/modules/keywords/service';
 
-const { createRequestBody, createResponse } = keywordsCreate;
-const { retrieveResponse } = keywordsRetrieve;
+const { readResponse } = KeywordsModel.read;
+const { deleteResponse } = KeywordsModel.delete;
+const { createRequestBody, createResponse } = KeywordsModel.create;
 
 export const keywordsRoute = new Elysia<string, APIContext>()
-
   /**
    * Get all keywords for a guild
    */
@@ -17,12 +17,12 @@ export const keywordsRoute = new Elysia<string, APIContext>()
     async ({ params, db, log, status }) => {
       log.info(`Fetching keywords for guild: ${params.guildId}`);
       return status(200, {
-        data: { message: 'Keywords retrieved successfully', keywords: [null] },
+        data: { message: 'Keywords retrieved successfully', keywords: [] },
       });
     },
     {
       response: {
-        200: retrieveResponse,
+        200: readResponse,
       },
     },
   )
@@ -76,5 +76,10 @@ export const keywordsRoute = new Elysia<string, APIContext>()
       );
 
       return status(200, { data: { message: 'Keyword deleted' } });
+    },
+    {
+      response: {
+        200: deleteResponse,
+      },
     },
   );

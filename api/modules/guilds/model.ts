@@ -1,8 +1,15 @@
 import { z } from 'zod';
 
+const BASE_GUILD_RESPONSE_OBJECT = z.object({
+  data: z.object({
+    message: z.string(),
+    error: z.string().optional(),
+  }),
+});
+
 export const GuildModel = {
-  retrieve: {
-    retrieveResponse: z.object({
+  read: {
+    readResponse: z.object({
       data: z.object({
         message: z.string(),
         guilds: z.array(
@@ -14,8 +21,9 @@ export const GuildModel = {
               createdAt: z.date(),
               updatedAt: z.date(),
             })
-            .nullable(),
+            .optional(),
         ),
+        error: z.string().optional(),
       }),
     }),
   },
@@ -31,18 +39,30 @@ export const GuildModel = {
       guildName: z.string(),
     }),
 
-    createResponse: z.object({
-      data: z.object({
-        message: z.string(),
-        error: z.string().optional(),
-      }),
+    createResponse: BASE_GUILD_RESPONSE_OBJECT,
+  },
+
+  update: {
+    updateRequestBody: z.object({
+      guildName: z.string(),
     }),
+
+    updateResponse: BASE_GUILD_RESPONSE_OBJECT,
+    updateServiceParams: z.object({
+      guildId: z.string(),
+      newName: z.string(),
+    }),
+  },
+
+  delete: {
+    deleteResponse: BASE_GUILD_RESPONSE_OBJECT,
   },
 };
 
-export const guildRetrieve = GuildModel.retrieve;
-export const guildCreate = GuildModel.create;
-
 export type CreateServiceParams = z.infer<
-  typeof guildCreate.createServiceParams
+  typeof GuildModel.create.createServiceParams
+>;
+
+export type UpdateServiceParams = z.infer<
+  typeof GuildModel.update.updateServiceParams
 >;
