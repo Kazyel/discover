@@ -37,9 +37,9 @@ const titleOnlyInputLabel = labelBuilder(
 );
 
 export default {
-  whatAndInputLabel,
-  whatExcludeInputLabel,
   whatInputLabel,
+  whatAndInputLabel,
   whatOrInputLabel,
+  whatExcludeInputLabel,
   titleOnlyInputLabel,
 };

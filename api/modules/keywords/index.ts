@@ -16,6 +16,7 @@ export const keywordsRoute = new Elysia<string, APIContext>()
     '/:guildId/keywords',
     async ({ params, db, log, status }) => {
       log.info(`Fetching keywords for guild: ${params.guildId}`);
+
       return status(200, {
         data: { message: 'Keywords retrieved successfully', keywords: [] },
       });
@@ -28,9 +29,9 @@ export const keywordsRoute = new Elysia<string, APIContext>()
   )
 
   /**
-   * Create keyword for a guild
+   * Save keyword for a guild
    */
-  .post(
+  .patch(
     '/:guildId/keywords',
     async ({ params, body, db, log, status }) => {
       log.info(`Creating keyword for guild: ${params.guildId}`);
@@ -38,11 +39,14 @@ export const keywordsRoute = new Elysia<string, APIContext>()
       const keywordsService = new KeywordsService(db);
 
       try {
-        await keywordsService.createKeyword(params.guildId, body);
+        await keywordsService.setKeywords({
+          guildId: params.guildId,
+          keywords: body,
+        });
 
-        return status(201, {
+        return status(200, {
           data: {
-            message: 'Keyword created',
+            message: 'Keyword updated successfully',
           },
         });
       } catch (error: unknown) {
@@ -59,7 +63,7 @@ export const keywordsRoute = new Elysia<string, APIContext>()
     {
       body: createRequestBody,
       response: {
-        201: createResponse,
+        200: createResponse,
         400: createResponse,
       },
     },

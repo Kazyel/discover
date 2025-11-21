@@ -59,10 +59,10 @@ export const GuildModel = {
   },
 };
 
-export type CreateServiceParams = z.infer<
+export type CreateGuildServiceParams = z.infer<
   typeof GuildModel.create.createServiceParams
 >;
 
-export type UpdateServiceParams = z.infer<
+export type UpdateGuildServiceParams = z.infer<
   typeof GuildModel.update.updateServiceParams
 >;

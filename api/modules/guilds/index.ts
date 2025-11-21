@@ -105,6 +105,7 @@ export const guildsRoute = new Elysia<string, APIContext>({ prefix: '/guilds' })
       log.info(`${request.method} | Request at: ${request.url}`);
 
       const { guildId, guildName } = body;
+
       const guildService = new GuildService(db);
 
       try {
