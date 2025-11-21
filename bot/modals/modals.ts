@@ -12,3 +12,5 @@ export const whereModal = new ModalBuilder()
   .setCustomId('setWhereModal')
   .setTitle('Set Where')
   .addLabelComponents([...Object.values(where)]);
+
+export type AvailableModals = 'setKeywordsModal' | 'setWhereModal';

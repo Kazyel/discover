@@ -1,7 +1,8 @@
 import { inputBuilder, labelBuilder } from '@/bot/modals/builders';
 
 const whereInput = inputBuilder('whereInput', false);
-const disctanceInput = inputBuilder('distanceInput', false);
+const distanceInput = inputBuilder('distanceInput', false);
+const countryInput = inputBuilder('countryInput', false);
 
 const whereInputLabel = labelBuilder(
   'Location',
@@ -9,13 +10,20 @@ const whereInputLabel = labelBuilder(
   whereInput,
 );
 
+const countryInputLabel = labelBuilder(
+  'Country',
+  'The country for the search location. Must be a 2-letter country code (e.g., US, GB, CA).',
+  countryInput,
+);
+
 const distanceInputLabel = labelBuilder(
   'Distance',
   'The distance in kilometres from the location. Defaults to 5km.',
-  disctanceInput,
+  distanceInput,
 );
 
 export default {
-  distanceInputLabel,
   whereInputLabel,
+  distanceInputLabel,
+  countryInputLabel,
 };

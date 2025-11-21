@@ -8,16 +8,14 @@ const BASE_KEYWORDS_RESPONSE_OBJECT = z.object({
 });
 
 const KEYWORDS_BASE_OBJECT = z.object({
-  type: z.enum(['search', 'where']),
-  keywords: z.object({
-    what: z.string().optional(),
-    what_or: z.string().optional(),
-    what_and: z.string().optional(),
-    what_exclude: z.string().optional(),
-    title_only: z.string().optional(),
-    where: z.string().optional(),
-    distance: z.number().optional(),
-  }),
+  what: z.string().optional(),
+  what_or: z.string().optional(),
+  what_and: z.string().optional(),
+  what_exclude: z.string().optional(),
+  title_only: z.string().optional(),
+  where: z.string().optional(),
+  distance: z.number().optional(),
+  country: z.string().optional(),
 });
 
 export const KeywordsModel = {
@@ -56,6 +54,6 @@ export const KeywordsModel = {
 
 export type Keywords = z.infer<typeof KEYWORDS_BASE_OBJECT>;
 
-export type CreateServiceParams = z.infer<
+export type CreateKeywordServiceParams = z.infer<
   typeof KeywordsModel.create.createServiceParams
 >;

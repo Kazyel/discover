@@ -1,10 +1,10 @@
 import type { Database } from '@/api/core/database';
 import type {
-  CreateServiceParams,
-  UpdateServiceParams,
+  CreateGuildServiceParams,
+  UpdateGuildServiceParams,
 } from '@/api/modules/guilds/model';
 
-import { guildsTable } from '@/api/db/schema';
+import { guildKeywordsTable, guildsTable } from '@/api/db/schema';
 import { eq } from 'drizzle-orm';
 
 const DEFAULT_GUILD_LIMIT = 20;
@@ -16,12 +16,19 @@ export class GuildService {
     this.db = db;
   }
 
-  async createGuild({ guildId, guildName }: CreateServiceParams) {
+  async createGuild({ guildId, guildName }: CreateGuildServiceParams) {
     try {
       await this.db
         .insert(guildsTable)
         .values({
           name: guildName,
+          guildId,
+        })
+        .execute();
+
+      await this.db
+        .insert(guildKeywordsTable)
+        .values({
           guildId,
         })
         .execute();
@@ -58,11 +65,11 @@ export class GuildService {
     }
   }
 
-  async updateGuildName({ guildId, newName }: UpdateServiceParams) {
+  async updateGuildName({ guildId, newName }: UpdateGuildServiceParams) {
     try {
       await this.db
         .update(guildsTable)
-        .set({ name: newName })
+        .set({ name: newName, updatedAt: new Date() })
         .where(eq(guildsTable.guildId, guildId))
         .execute();
     } catch (error) {
