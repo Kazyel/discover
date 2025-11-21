@@ -1,21 +1,28 @@
 import { z } from 'zod';
 
-const keywordsBase = z.object({
+const BASE_KEYWORDS_RESPONSE_OBJECT = z.object({
+  data: z.object({
+    message: z.string(),
+    error: z.string().optional(),
+  }),
+});
+
+const KEYWORDS_BASE_OBJECT = z.object({
   type: z.enum(['search', 'where']),
   keywords: z.object({
     what: z.string().optional(),
-    what_or: z.string().nullable(),
-    what_and: z.string().nullable(),
-    what_exclude: z.string().nullable(),
-    title_only: z.string().nullable(),
-    where: z.string().nullable(),
-    distance: z.number().nullable(),
+    what_or: z.string().optional(),
+    what_and: z.string().optional(),
+    what_exclude: z.string().optional(),
+    title_only: z.string().optional(),
+    where: z.string().optional(),
+    distance: z.number().optional(),
   }),
 });
 
 export const KeywordsModel = {
-  retrieve: {
-    retrieveResponse: z.object({
+  read: {
+    readResponse: z.object({
       data: z.object({
         message: z.string(),
         keywords: z.array(
@@ -27,34 +34,28 @@ export const KeywordsModel = {
               createdAt: z.date(),
               updatedAt: z.date(),
             })
-            .nullable(),
+            .optional(),
         ),
       }),
     }),
   },
 
   create: {
-    createRequestBody: keywordsBase,
-
+    createResponse: BASE_KEYWORDS_RESPONSE_OBJECT,
+    createRequestBody: KEYWORDS_BASE_OBJECT,
     createServiceParams: z.object({
       guildId: z.string(),
-      keywords: keywordsBase,
+      keywords: KEYWORDS_BASE_OBJECT,
     }),
+  },
 
-    createResponse: z.object({
-      data: z.object({
-        message: z.string(),
-        error: z.string().optional(),
-      }),
-    }),
+  delete: {
+    deleteResponse: BASE_KEYWORDS_RESPONSE_OBJECT,
   },
 };
 
-export const keywordsRetrieve = KeywordsModel.retrieve;
-export const keywordsCreate = KeywordsModel.create;
-
-export type Keywords = z.infer<typeof keywordsBase>;
+export type Keywords = z.infer<typeof KEYWORDS_BASE_OBJECT>;
 
 export type CreateServiceParams = z.infer<
-  typeof keywordsCreate.createServiceParams
+  typeof KeywordsModel.create.createServiceParams
 >;
