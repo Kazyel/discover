@@ -1,41 +1,29 @@
 import { z } from 'zod';
 
+const KEYWORDS_BASE_OBJECT = z
+  .object({
+    what: z.string().optional(),
+    what_or: z.string().optional(),
+    what_and: z.string().optional(),
+    what_exclude: z.string().optional(),
+    title_only: z.string().optional(),
+    where: z.string().optional(),
+    distance: z.number().optional(),
+    country: z.string().optional(),
+  })
+  .optional();
+
 const BASE_KEYWORDS_RESPONSE_OBJECT = z.object({
   data: z.object({
     message: z.string(),
+    keywords: KEYWORDS_BASE_OBJECT,
     error: z.string().optional(),
   }),
 });
 
-const KEYWORDS_BASE_OBJECT = z.object({
-  what: z.string().optional(),
-  what_or: z.string().optional(),
-  what_and: z.string().optional(),
-  what_exclude: z.string().optional(),
-  title_only: z.string().optional(),
-  where: z.string().optional(),
-  distance: z.number().optional(),
-  country: z.string().optional(),
-});
-
 export const KeywordsModel = {
   read: {
-    readResponse: z.object({
-      data: z.object({
-        message: z.string(),
-        keywords: z.array(
-          z
-            .object({
-              id: z.number(),
-              guildId: z.string(),
-              name: z.string(),
-              createdAt: z.date(),
-              updatedAt: z.date(),
-            })
-            .optional(),
-        ),
-      }),
-    }),
+    readResponse: BASE_KEYWORDS_RESPONSE_OBJECT,
   },
 
   create: {
@@ -45,10 +33,6 @@ export const KeywordsModel = {
       guildId: z.string(),
       keywords: KEYWORDS_BASE_OBJECT,
     }),
-  },
-
-  delete: {
-    deleteResponse: BASE_KEYWORDS_RESPONSE_OBJECT,
   },
 };
 
