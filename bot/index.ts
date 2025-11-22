@@ -23,9 +23,6 @@ client.once(Events.ClientReady, (readyClient) => {
 
 commands.deploy();
 
-/**
- * Register Listeners
- */
 commandsListener.register();
 guildsListener.register();
 keywordsListener.register();

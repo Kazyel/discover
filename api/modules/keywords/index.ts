@@ -5,25 +5,45 @@ import { KeywordsModel } from '@/api/modules/keywords/model';
 import { KeywordsService } from '@/api/modules/keywords/service';
 
 const { readResponse } = KeywordsModel.read;
-const { deleteResponse } = KeywordsModel.delete;
 const { createRequestBody, createResponse } = KeywordsModel.create;
 
 export const keywordsRoute = new Elysia<string, APIContext>()
   /**
-   * Get all keywords for a guild
+   * Get all keywords for a specific guild
    */
   .get(
     '/:guildId/keywords',
     async ({ params, db, log, status }) => {
       log.info(`Fetching keywords for guild: ${params.guildId}`);
 
-      return status(200, {
-        data: { message: 'Keywords retrieved successfully', keywords: [] },
-      });
+      const keywordsService = new KeywordsService(db);
+
+      try {
+        const keywords = await keywordsService.getKeywordsByGuildId(
+          params.guildId,
+        );
+
+        return status(200, {
+          data: {
+            message: 'Keywords retrieved successfully',
+            keywords: keywords[0] || {},
+          },
+        });
+      } catch (error: unknown) {
+        log.error(`Error fetching keywords: ${error}`);
+
+        return status(400, {
+          data: {
+            message: 'Internal Server Error',
+            error: (error as Error).message,
+          },
+        });
+      }
     },
     {
       response: {
         200: readResponse,
+        400: readResponse,
       },
     },
   )
@@ -65,25 +85,6 @@ export const keywordsRoute = new Elysia<string, APIContext>()
       response: {
         200: createResponse,
         400: createResponse,
-      },
-    },
-  )
-
-  /**
-   * Delete specific keyword
-   */
-  .delete(
-    '/:guildId/keywords/:keywordId',
-    async ({ params, db, log, status }) => {
-      log.info(
-        `Deleting keyword ${params.keywordId} from guild ${params.guildId}`,
-      );
-
-      return status(200, { data: { message: 'Keyword deleted' } });
-    },
-    {
-      response: {
-        200: deleteResponse,
       },
     },
   );

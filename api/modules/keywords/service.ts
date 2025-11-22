@@ -17,7 +17,16 @@ export class KeywordsService {
   async getKeywordsByGuildId(guildId: string): Promise<Keywords[]> {
     try {
       const keywords = await this.db
-        .select()
+        .select({
+          what: guildKeywordsTable.what,
+          what_or: guildKeywordsTable.what_or,
+          what_and: guildKeywordsTable.what_and,
+          what_exclude: guildKeywordsTable.what_exclude,
+          title_only: guildKeywordsTable.title_only,
+          where: guildKeywordsTable.where,
+          distance: guildKeywordsTable.distance,
+          country: guildKeywordsTable.country,
+        })
         .from(guildKeywordsTable)
         .where(eq(guildKeywordsTable.guildId, guildId))
         .execute();
@@ -34,6 +43,7 @@ export class KeywordsService {
         .update(guildKeywordsTable)
         .set({
           ...keywords,
+          updatedAt: new Date(),
         })
         .where(eq(guildKeywordsTable.guildId, guildId))
         .execute();

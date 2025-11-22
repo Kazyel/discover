@@ -72,7 +72,7 @@ export class API {
   }
 
   public addRoute(route: APIElysia) {
-    this.app.use(route);
+    return this.app.use(route);
   }
 
   /*

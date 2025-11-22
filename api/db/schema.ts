@@ -17,7 +17,7 @@ export const guildsTable = pgTable('guilds', {
 export const guildKeywordsTable = pgTable('guild_keywords', {
   id: serial('id').primaryKey(),
   guildId: varchar('guild_id', { length: 255 })
-    .references(() => guildsTable.guildId)
+    .references(() => guildsTable.guildId, { onDelete: 'cascade' })
     .notNull(),
   what: varchar('what', { length: 255 }).default('').notNull(),
   what_and: varchar('what_and', { length: 255 }).default('').notNull(),
