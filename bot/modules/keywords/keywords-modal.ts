@@ -1,4 +1,4 @@
-import { inputBuilder, labelBuilder } from '@/bot/modals/builders';
+import { inputBuilder, labelBuilder } from '@/bot/lib/utils/modal-builders';
 
 const whatInput = inputBuilder('whatInput', false);
 const whatAndInput = inputBuilder('whatAndInput', false);
