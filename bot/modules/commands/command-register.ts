@@ -1,18 +1,16 @@
 import {
+  type Client,
   ChatInputCommandInteraction,
   Collection,
   InteractionResponse,
   SlashCommandBuilder,
   REST,
   Routes,
-  type Client,
 } from 'discord.js';
 
-import check_connection from '@/bot/commands/check_connection';
-import save_guild from '@/bot/commands/save_guild';
-import retrieve_guild from '@/bot/commands/retrieve_guild';
-import set_keywords from '@/bot/commands/set_keywords';
-import set_where from '@/bot/commands/set_where';
+import check_connection from '@/bot/modules/commands/slash/check_connection';
+import set_keywords from '@/bot/modules/commands/slash/set_keywords';
+import set_where from '@/bot/modules/commands/slash/set_where';
 
 export type Command = {
   data: SlashCommandBuilder;
@@ -25,8 +23,6 @@ export type AvailableCommands = keyof typeof commands;
 
 const commands = {
   check_connection,
-  retrieve_guild,
-  save_guild,
   set_keywords,
   set_where,
 };
@@ -37,11 +33,8 @@ const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 
 const commandsData = Object.values(commands).map((command) => command.data);
 
-class CommandRegister {
-  public deploy = async () => {
-    if (!DISCORD_TOKEN) {
-      throw new Error('DISCORD_BOT_TOKEN environment variable is not set.');
-    }
+export class CommandRegister {
+  public async deploy() {
     if (!CLIENT_ID) {
       throw new Error('CLIENT_ID environment variable is not set.');
     }
@@ -49,7 +42,7 @@ class CommandRegister {
       throw new Error('GUILD_ID environment variable is not set.');
     }
 
-    const rest = new REST().setToken(DISCORD_TOKEN);
+    const rest = new REST().setToken(DISCORD_TOKEN!);
 
     (async () => {
       try {
@@ -64,7 +57,7 @@ class CommandRegister {
         console.error(error);
       }
     })();
-  };
+  }
 
   public register(client: Client) {
     client.commands = new Collection();
@@ -75,5 +68,3 @@ class CommandRegister {
     }
   }
 }
-
-export default CommandRegister;

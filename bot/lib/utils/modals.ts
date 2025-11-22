@@ -1,7 +1,7 @@
 import { ModalBuilder } from 'discord.js';
 
-import keywords from '@/bot/modals/keywords-modal';
-import where from '@/bot/modals/where-modal';
+import keywords from '@/bot/modules/keywords/keywords-modal';
+import where from '@/bot/modules/keywords/where-modal';
 
 export const keywordsModal = new ModalBuilder()
   .setCustomId('setKeywordsModal')
