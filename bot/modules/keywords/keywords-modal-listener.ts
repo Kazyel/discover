@@ -125,7 +125,7 @@ export class KeywordsModalListener implements Listener {
     const requestBody = {
       where: whereInput.length > 0 ? whereInput : undefined,
       distance: distanceInput.length > 0 ? Number(distanceInput) : undefined,
-      country: countryInput.length > 0 ? countryInput : undefined,
+      country: countryInput.length > 0 ? countryInput.toLowerCase() : undefined,
     };
 
     try {

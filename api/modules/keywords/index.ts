@@ -26,6 +26,7 @@ export const keywordsRoute = new Elysia<string, APIContext>()
         return status(200, {
           data: {
             message: 'Keywords retrieved successfully',
+            guildId: params.guildId,
             keywords: keywords[0] || {},
           },
         });
@@ -49,12 +50,12 @@ export const keywordsRoute = new Elysia<string, APIContext>()
   )
 
   /**
-   * Save keyword for a guild
+   * Update keywords for a guild
    */
   .patch(
     '/:guildId/keywords',
     async ({ params, body, db, log, status }) => {
-      log.info(`Creating keyword for guild: ${params.guildId}`);
+      log.info(`Updating keywords for guild: ${params.guildId}`);
 
       const keywordsService = new KeywordsService(db);
 

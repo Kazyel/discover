@@ -16,6 +16,7 @@ const KEYWORDS_BASE_OBJECT = z
 const BASE_KEYWORDS_RESPONSE_OBJECT = z.object({
   data: z.object({
     message: z.string(),
+    guildId: z.string().optional(),
     keywords: KEYWORDS_BASE_OBJECT,
     error: z.string().optional(),
   }),
