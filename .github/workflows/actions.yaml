@@ -10,6 +10,14 @@ on:
 
 jobs:
   test:
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+      ADZUNA_API_KEY: ${{ secrets.ADZUNA_API_KEY }}
+      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      GUILD_ID: ${{ secrets.GUILD_ID }}
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
