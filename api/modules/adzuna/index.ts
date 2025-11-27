@@ -8,11 +8,15 @@ export const adzunaRoute = new Elysia<string, APIContext>()
   /**
    * Fetch jobs from Adzuna API based on keywords
    */
-  .get(
+  .post(
     '/adzuna/jobs',
-    async ({ log, status }) => {
-      log.info(`Initiating job fetch from Adzuna API for guild`);
-      const adzuna = new AdzunaService({ what: 'teste', country: 'br' });
+    async ({ log, body, request, status }) => {
+      log.info(`POST | Request ${request.url}`);
+      log.info(
+        `Initiating job fetch from Adzuna API for guild: ${body.guildId}`,
+      );
+
+      const adzuna = new AdzunaService(body.keywords);
 
       try {
         const data = await adzuna.fetchJobs();
@@ -25,7 +29,7 @@ export const adzunaRoute = new Elysia<string, APIContext>()
         log.info(`Successfully fetched jobs from Adzuna API`);
         return status(200, {
           data: {
-            message: 'Jobs fetched successfully',
+            message: `Jobs fetched successfully for guild: ${body.guildId}`,
             results: data.results,
           },
         });

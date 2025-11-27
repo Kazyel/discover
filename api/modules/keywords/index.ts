@@ -13,7 +13,8 @@ export const keywordsRoute = new Elysia<string, APIContext>()
    */
   .get(
     '/:guildId/keywords',
-    async ({ params, db, log, status }) => {
+    async ({ params, db, log, request, status }) => {
+      log.info(`GET | Request ${request.url}`);
       log.info(`Fetching keywords for guild: ${params.guildId}`);
 
       const keywordsService = new KeywordsService(db);
@@ -54,7 +55,8 @@ export const keywordsRoute = new Elysia<string, APIContext>()
    */
   .patch(
     '/:guildId/keywords',
-    async ({ params, body, db, log, status }) => {
+    async ({ params, body, db, log, request, status }) => {
+      log.info(`PATCH | Request ${request.url}`);
       log.info(`Updating keywords for guild: ${params.guildId}`);
 
       const keywordsService = new KeywordsService(db);
