@@ -28,6 +28,15 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       ADZUNA_APP_ID: ${ADZUNA_APP_ID}
       ADZUNA_API_KEY: ${ADZUNA_API_KEY}
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: sync
+          path: ./api
+          target: /app/api
+          ignore:
+            - node_modules/
     depends_on:
       redis:
         condition: service_healthy
@@ -46,6 +55,15 @@ services:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       CLIENT_ID: ${CLIENT_ID}
       GUILD_ID: ${GUILD_ID}
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: sync
+          path: ./bot
+          target: /app/bot
+          ignore:
+            - node_modules/
     depends_on:
       redis:
         condition: service_healthy
