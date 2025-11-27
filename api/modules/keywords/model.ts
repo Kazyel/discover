@@ -38,6 +38,9 @@ export const KeywordsModel = {
 };
 
 export type Keywords = z.infer<typeof KEYWORDS_BASE_OBJECT>;
+export type ReadKeywordsResponse = z.infer<
+  typeof KeywordsModel.read.readResponse
+>;
 
 export type CreateKeywordServiceParams = z.infer<
   typeof KeywordsModel.create.createServiceParams

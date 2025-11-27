@@ -1,5 +1,5 @@
 import type { Keywords } from '@/api/modules/keywords/model';
-import { type AdzunaResponse } from '@/api/modules/adzuna/model';
+import { type AdzunaJobObject } from '@/api/modules/adzuna/model';
 
 import Undici from 'undici';
 
@@ -13,7 +13,7 @@ export class AdzunaService {
     this.keywords = keywords;
   }
 
-  public async fetchJobs(): Promise<AdzunaResponse | void> {
+  public async fetchJobs(): Promise<AdzunaJobObject | void> {
     if (!process.env.ADZUNA_APP_ID || !process.env.ADZUNA_API_KEY) {
       throw new Error(
         'Adzuna API credentials are not properly set in environment variables',
@@ -37,7 +37,7 @@ export class AdzunaService {
         throw new Error('Adzuna API responded with non-200 status code');
       }
 
-      return (await body.json()) as AdzunaResponse;
+      return (await body.json()) as AdzunaJobObject;
     } catch (error: unknown) {
       throw new Error(
         `Error fetching jobs from Adzuna API: ${(error as Error).message}`,

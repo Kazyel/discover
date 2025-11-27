@@ -24,3 +24,29 @@ jobs:
 
       - name: Linting Check
         run: bun run lint
+
+      - name: Build Docker Services
+        run: docker compose build
+
+      - name: Start Docker Services
+        run: docker compose up -d
+
+      - name: Wait for Services to be Ready
+        run: |
+          echo "Waiting for API..."
+          for i in {1..20}; do
+            if curl -s http://localhost:3000/api/v1/guilds > /dev/null; then
+              echo "API is ready!"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "API failed to start"
+          exit 1
+
+      - name: Run Tests
+        run: bun test
+
+      - name: Stop Docker Services
+        if: always()
+        run: docker compose down

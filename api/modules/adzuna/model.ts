@@ -52,4 +52,5 @@ export const AdzunaModel = {
   },
 };
 
-export type AdzunaResponse = z.infer<typeof ADZUNA_JOB_OBJECT>;
+export type AdzunaJobObject = z.infer<typeof ADZUNA_JOB_OBJECT>;
+export type AdzunaResponse = z.infer<typeof AdzunaModel.response>;
